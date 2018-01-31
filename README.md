@@ -32,7 +32,7 @@ sudo ln -sf /usr/share/munin/plugins/mongo_docs /etc/munin/plugins/mongo_docs
 sudo ln -sf /usr/share/munin/plugins/mongo_mem /etc/munin/plugins/mongo_mem
 sudo ln -sf /usr/share/munin/plugins/mongo_ops /etc/munin/plugins/mongo_ops
 sudo chmod +x /usr/share/munin/plugins/mongo_*
-sudo service munin-node restart
+sudo systemctl restart munin-node.service
 ```
 
 Check if plugins are running:
