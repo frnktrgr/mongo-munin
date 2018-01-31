@@ -7,38 +7,36 @@ import sys
 import os  
 import pymongo
 
-def getServerStatus():
+
+def get_server_status():
     if 'MONGO_DB_URI' in os.environ:
-      c = pymongo.MongoClient(os.environ['MONGO_DB_URI'])
+        c = pymongo.MongoClient(os.environ['MONGO_DB_URI'])
     else:
-      c = pymongo.MongoClient()
+        c = pymongo.MongoClient()
 
     return c.admin.command('serverStatus', workingSet=True)
+
 
 def ok(s):
     return s == "resident" or s == "virtual" or s == "mapped"
 
-def doData():
-    for k,v in getServerStatus()["mem"].iteritems():
-        if ok(k):
-            print( str(k) + ".value " + str(v * 1024 * 1024) )
 
-def doConfig():
+def do_data():
+    for k,v in get_server_status()["mem"].iteritems():
+        if ok(k):
+            print(str(k) + ".value " + str(v * 1024 * 1024))
+
+
+def do_config():
 
     print "graph_title MongoDB memory usage"
     print "graph_args --base 1024 -l 0 --vertical-label Bytes"
     print "graph_category MongoDB"
 
-    for k in getServerStatus()["mem"]:
+    for k in get_server_status()["mem"]:
         if ok( k ):
             print k + ".label " + k
             print k + ".draw LINE1"
-
-
-
-
-
-
 
 if __name__ == "__main__":          
 	
@@ -53,6 +51,6 @@ if __name__ == "__main__":
         password = environ['PASSWORD']
     
 if len(sys.argv) > 1 and sys.argv[1] == "config":
-    doConfig()
+    do_config()
 else:
-    doData()
+    do_data()

@@ -1,74 +1,59 @@
+# Munin Plugins for MongoDB
 
-Munin Plugins for MongoDB
-============
+Forked from https://github.com/comerford/mongo-munin.
 
-Plugins
-----------
+Thanks to Adam Comerford. Changes: Removed broken plugins for MongoDB 3.2+
+
+# Provided Munin Plugins
+
 * mongo_ops   : operations/second
 * mongo_mem   : mapped, virtual and resident memory usage
-* mongo_btree : btree access/misses/etc...
 * mongo_conn  : current connections
-* mongo_lock  : write lock info
 * mongo_docs  : number of documents (inserted, updated...)
 
-Requirements
------------
-* MongoDB 2.4+
+# Requirements
+* MongoDB 3.2+ (tested with 3.2)
 * python/pymongo
 
+## Install python pymongo
 
-## Install Requirements (choose one)
+### Ubuntu
 
-#### Ubuntu
-
-Install pymongo:
-
-    sudo apt-get install pip
-    sudo apt-get install build-essential python-dev
-    sudo pip install pymongo
-
-
-#### Red Hat and Cent OS
-
-Enable the EPEL Repository:
-
-    sudo yum -y install epel-release
-    
-Install pymongo:
-
-    sudo yum install pymongo
-
+```bash
+sudo apt-get install -y python-pymongo
+```
 
 ## Install plugins
-
-    git clone https://github.com/comerford/mongo-munin.git /tmp/mongo-munin
-    sudo cp /tmp/mongo-munin/mongo_* /usr/share/munin/plugins
-    sudo ln -sf /usr/share/munin/plugins/mongo_btree /etc/munin/plugins/mongo_btree
-    sudo ln -sf /usr/share/munin/plugins/mongo_conn /etc/munin/plugins/mongo_conn
-    sudo ln -sf /usr/share/munin/plugins/mongo_lock /etc/munin/plugins/mongo_lock
-    sudo ln -sf /usr/share/munin/plugins/mongo_mem /etc/munin/plugins/mongo_mem
-    sudo ln -sf /usr/share/munin/plugins/mongo_ops /etc/munin/plugins/mongo_ops
-    sudo ln -sf /usr/share/munin/plugins/mongo_docs /etc/munin/plugins/mongo_docs
-    sudo chmod +x /usr/share/munin/plugins/mongo_*
-    sudo service munin-node restart
+```bash
+git clone https://github.com/frnktrgr/mongo-munin.git /tmp/mongo-munin
+sudo cp /tmp/mongo-munin/mongo_* /usr/share/munin/plugins
+sudo ln -sf /usr/share/munin/plugins/mongo_conn /etc/munin/plugins/mongo_conn
+sudo ln -sf /usr/share/munin/plugins/mongo_docs /etc/munin/plugins/mongo_docs
+sudo ln -sf /usr/share/munin/plugins/mongo_mem /etc/munin/plugins/mongo_mem
+sudo ln -sf /usr/share/munin/plugins/mongo_ops /etc/munin/plugins/mongo_ops
+sudo chmod +x /usr/share/munin/plugins/mongo_*
+sudo service munin-node restart
+```
 
 Check if plugins are running:
-
-    munin-node-configure | grep "mongo_"
+```bash
+munin-node-configure | grep "mongo_"
+```
 
 Test plugin output:
+```bash
+munin-run mongo_conn
+munin-run mongo_docs
+munin-run mongo_mem
+munin-run mongo_ops
 
-    munin-run mongo_ops
+```
 
-### Configuration
+## Configuration
 
-
-**how to configure custom db connection**
-
-munin-node can set env value in below file:
-
-`/etc/munin/plugin-conf.d/munin-node`
-
-    [mongo_*]
-    env.MONGO_DB_URI mongodb://user:password@host:port/dbname
+Add connection URI to `/etc/munin/plugin-conf.d/munin-node`:
+```
+[mongo_*]
+env.MONGO_DB_URI mongodb://user:password@host:port/dbname
+```
 

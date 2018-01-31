@@ -7,21 +7,23 @@ import sys
 import os  
 import pymongo
 
-def getServerStatus():
+
+def get_server_status():
     if 'MONGO_DB_URI' in os.environ:
-      c = pymongo.MongoClient(os.environ['MONGO_DB_URI'])
+        c = pymongo.MongoClient(os.environ['MONGO_DB_URI'])
     else:
-      c = pymongo.MongoClient()
+        c = pymongo.MongoClient()
 
     return c.admin.command('serverStatus', workingSet=True)
 
 
-def doData():
-    ss = getServerStatus()
-    for k,v in ss["opcounters"].iteritems():
-        print( str(k) + ".value " + str(v) )
+def do_data():
+    ss = get_server_status()
+    for k, v in ss["opcounters"].iteritems():
+        print(str(k) + ".value " + str(v))
 
-def doConfig():
+
+def do_config():
 
     print "graph_title MongoDB ops"
     print "graph_args --base 1000 -l 0"
@@ -29,7 +31,7 @@ def doConfig():
     print "graph_category MongoDB"
     print "graph_total total"
 
-    for k in getServerStatus()["opcounters"]:
+    for k in get_server_status()["opcounters"]:
         print k + ".label " + k
         print k + ".min 0"
         print k + ".type COUNTER"
@@ -49,6 +51,6 @@ if __name__ == "__main__":
         password = environ['PASSWORD']
     
 if len(sys.argv) > 1 and sys.argv[1] == "config":
-    doConfig()
+    do_config()
 else:
-    doData()
+    do_data()
